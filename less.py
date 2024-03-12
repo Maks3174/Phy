@@ -1,28 +1,12 @@
-class BankAccount:
-    def __init__(self, owner, balance=0):
-        self.owner = owner
-        self.balance = balance
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
 
-    def deposit(self, amount):
-        if amount > 0:
-            self.balance += amount
-            print(f"Внесено {amount} грошей. Новий баланс: {self.balance}")
-        else:
-            print("Недійсна сума для внесення.")
+    def is_adult(self):
+        return self.age > 18
 
-    def withdraw(self, amount):
-        if amount > 0:
-            if self.balance >= amount:
-                self.balance -= amount
-                print(f"Знято {amount} грошей. Новий баланс: {self.balance}")
-            else:
-                print("Недостатньо коштів на рахунку.")
-        else:
-            print("Недійсна сума для зняття.")
-
-
-account1 = BankAccount("Іван Петрович")
-account1.deposit(100)
-account1.withdraw(50)
-account1.withdraw(80)
-account1.deposit(-20)
+person1 = Person("Діма", 19)
+print(person1.is_adult())
+person2 = Person("Марія", 17)
+print(person2.is_adult())
