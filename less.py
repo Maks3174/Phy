@@ -1,10 +1,13 @@
-class Student:
-    def __init__(self, name, age):
-        self.name = name
-        self.age = age
+import math
 
-    def print_info(self):
-        print(f"Ім'я: {self.name}, Вік: {self.age}")
 
-student1 = Student("Віка", 20)
-student1.print_info()
+class Circle:
+    def __init__(self, radius):
+        self.radius = radius
+
+    def area(self):
+        return math.pi * self.radius ** 2
+
+
+circle1 = Circle(4)
+print("Площа кола з радіусом 4:", circle1.area())
