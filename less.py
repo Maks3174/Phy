@@ -1,11 +1,12 @@
-class Book:
-    def __init__(self, title, author, genre):
-        self.title = title
-        self.author = author
-        self.genre = genre
+class Car:
+    def __init__(self, brand, model, year):
+        self.brand = brand
+        self.model = model
+        self.year = year
 
-    def display_info(self):
-        print(f"Назва: {self.title}, Автор: {self.author}, Жанр: {self.genre}")
+    def start_engine(self):
+        print("Двигун запущено.")
 
-book1 = Book("Володар перснів", "Джон Роналд Руел Толкін", "фентезі")
-book1.display_info()
+
+car1 = Car("Mercedes-Benz", "W220", 2005)
+car1.start_engine()
