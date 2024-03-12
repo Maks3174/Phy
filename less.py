@@ -1,13 +1,11 @@
-import math
+class Book:
+    def __init__(self, title, author, genre):
+        self.title = title
+        self.author = author
+        self.genre = genre
 
+    def display_info(self):
+        print(f"Назва: {self.title}, Автор: {self.author}, Жанр: {self.genre}")
 
-class Circle:
-    def __init__(self, radius):
-        self.radius = radius
-
-    def area(self):
-        return math.pi * self.radius ** 2
-
-
-circle1 = Circle(4)
-print("Площа кола з радіусом 4:", circle1.area())
+book1 = Book("Володар перснів", "Джон Роналд Руел Толкін", "фентезі")
+book1.display_info()
