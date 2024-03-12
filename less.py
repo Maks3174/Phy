@@ -1,17 +1,9 @@
-class Animals:
-    def braeth(self):
-        print("дихає")
-    def move(self):
-        print("рухається")
-    def eat_food(self):
-        print("Їсть")
+class Dogs:
+    def __init__(self, name, age, breed):
+        self.name = name
+        self.age = age
+        self.breed = breed
 
-
-class Dogs(Animals):
-    pass
-
-class Cat(Animals):
-    pass
-
-my_dog = Dogs()
-my_dog.braeth()
+my_dog = Dogs("Бобік", 5 , "Лабрадор")
+print(my_dog.name)
+print(my_dog.age)
