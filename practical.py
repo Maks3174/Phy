@@ -1,35 +1,35 @@
-class Book:
-    def __init__(self, title, author, genre):
-        self.title = title
-        self.author = author
-        self.genre = genre
-
-    def display_info(self):
-        print(f"Назва: {self.title}, Автор: {self.author}, Жанр: {self.genre}")
+class Stadium:
+    def __init__(self, name, opening_date, country, city, capacity):
+        self.name = name
+        self.opening_date = opening_date
+        self.country = country
+        self.city = city
+        self.capacity = capacity
 
     def __str__(self):
-        return f"Книга: {self.title}, Автор: {self.author}, Жанр: {self.genre}"
+        return f"Стадіон: {self.name}, Дата відкриття: {self.opening_date}, Країна: {self.country}, Місто: {self.city}, Місткість: {self.capacity}"
 
     def __eq__(self, other):
-        return self.title == other.title and self.author == other.author and self.genre == other.genre
+        return self.capacity == other.capacity
 
     def __lt__(self, other):
-        return self.title < other.title
+        return self.capacity < other.capacity
 
     def __le__(self, other):
-        return self.title <= other.title
+        return self.capacity <= other.capacity
 
     def __gt__(self, other):
-        return self.title > other.title
+        return self.capacity > other.capacity
 
     def __ge__(self, other):
-        return self.title >= other.title
+        return self.capacity >= other.capacity
 
-book1 = Book("Володар перснів", "Джон Роналд Руел Толкін", "фентезі")
-book2 = Book("Гаррі Поттер і філософський камінь", "Джоан Роулінг", "фентезі")
+stadium1 = Stadium("Camp Nou", "1957-09-24", "Spain", "Barcelona", 99354)
+stadium2 = Stadium("Wembley Stadium", "2007-03-17", "England", "London", 90000)
 
-print(book1 < book2)
-print(book1 == book2)
+print(stadium1 < stadium2)
+print(stadium1 == stadium2)
 
-print(book1)
-print(book2)
+print(stadium1)
+print(stadium2)
+
