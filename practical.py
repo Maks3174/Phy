@@ -1,35 +1,35 @@
-class Car:
-    def __init__(self, brand, model, year):
-        self.brand = brand
-        self.model = model
-        self.year = year
+class Book:
+    def __init__(self, title, author, genre):
+        self.title = title
+        self.author = author
+        self.genre = genre
 
-    def start_engine(self):
-        print("Двигун запущено.")
+    def display_info(self):
+        print(f"Назва: {self.title}, Автор: {self.author}, Жанр: {self.genre}")
 
     def __str__(self):
-        return f"Марка: {self.brand}, Модель: {self.model}, Рік: {self.year}"
+        return f"Книга: {self.title}, Автор: {self.author}, Жанр: {self.genre}"
 
     def __eq__(self, other):
-        return self.year == other.year
+        return self.title == other.title and self.author == other.author and self.genre == other.genre
 
     def __lt__(self, other):
-        return self.year < other.year
+        return self.title < other.title
 
     def __le__(self, other):
-        return self.year <= other.year
+        return self.title <= other.title
 
     def __gt__(self, other):
-        return self.year > other.year
+        return self.title > other.title
 
     def __ge__(self, other):
-        return self.year >= other.year
+        return self.title >= other.title
 
-car1 = Car("Mercedes-Benz", "W220", 2005)
-car2 = Car("BMW", "X5", 2010)
+book1 = Book("Володар перснів", "Джон Роналд Руел Толкін", "фентезі")
+book2 = Book("Гаррі Поттер і філософський камінь", "Джоан Роулінг", "фентезі")
 
-print(car1 < car2)
-print(car1 == car2)
+print(book1 < book2)
+print(book1 == book2)
 
-print(car1)
-print(car2)
+print(book1)
+print(book2)
