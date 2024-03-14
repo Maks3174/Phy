@@ -1,46 +1,35 @@
-class Fraction:
-    def __init__(self, numerator, denominator):
-        self.numerator = numerator
-        self.denominator = denominator
+class Car:
+    def __init__(self, brand, model, year):
+        self.brand = brand
+        self.model = model
+        self.year = year
 
-    def display_fraction(self):
-        print(f"{self.numerator}/{self.denominator}")
+    def start_engine(self):
+        print("Двигун запущено.")
 
-    def add(self, other_fraction):
-        result_numerator = self.numerator * other_fraction.denominator + other_fraction.numerator * self.denominator
-        result_denominator = self.denominator * other_fraction.denominator
-        return Fraction(result_numerator, result_denominator)
+    def __str__(self):
+        return f"Марка: {self.brand}, Модель: {self.model}, Рік: {self.year}"
 
-    def subtract(self, other_fraction):
-        result_numerator = self.numerator * other_fraction.denominator - other_fraction.numerator * self.denominator
-        result_denominator = self.denominator * other_fraction.denominator
-        return Fraction(result_numerator, result_denominator)
+    def __eq__(self, other):
+        return self.year == other.year
 
-    def multiply(self, other_fraction):
-        result_numerator = self.numerator * other_fraction.numerator
-        result_denominator = self.denominator * other_fraction.denominator
-        return Fraction(result_numerator, result_denominator)
+    def __lt__(self, other):
+        return self.year < other.year
 
-    def divide(self, other_fraction):
-        result_numerator = self.numerator * other_fraction.denominator
-        result_denominator = self.denominator * other_fraction.numerator
-        return Fraction(result_numerator, result_denominator)
+    def __le__(self, other):
+        return self.year <= other.year
 
+    def __gt__(self, other):
+        return self.year > other.year
 
-fraction1 = Fraction(1, 2)
-fraction2 = Fraction(2, 4)
+    def __ge__(self, other):
+        return self.year >= other.year
 
-fraction1.display_fraction()
-fraction2.display_fraction()
+car1 = Car("Mercedes-Benz", "W220", 2005)
+car2 = Car("BMW", "X5", 2010)
 
-result_addition = fraction1.add(fraction2)
-result_addition.display_fraction()
+print(car1 < car2)
+print(car1 == car2)
 
-result_addition = fraction1.subtract(fraction2)
-result_addition.display_fraction()
-
-result_addition = fraction1.multiply(fraction2)
-result_addition.display_fraction()
-
-result_addition = fraction1.divide(fraction2)
-result_addition.display_fraction()
+print(car1)
+print(car2)
