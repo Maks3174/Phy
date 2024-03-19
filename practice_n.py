@@ -31,6 +31,12 @@ class ShoppingCart:
         else:
             self.__items[product]["quantity"] += quantity
 
+    def remove_item(self, product):
+        if product in self.__items:
+            self.__items[product]["quantity"] -= 1
+            if self.__items[product]["quantity"] == 0:
+                del self.__items[product]
+
     def total_price(self):
         total = 0
         for item in self.__items.values():
@@ -44,8 +50,9 @@ cart.add_item("Молоко", 25, 2)
 cart.add_item("Хліб", 15)
 cart.add_item("Яйця", 10, 2)
 
-print("Загальна вартість покупок:", cart.total_price())
+cart.remove_item("Молоко")
 
+print("Загальна вартість покупок:", cart.total_price())
 
 #3
 class ElectronicWallet:
