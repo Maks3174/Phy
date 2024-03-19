@@ -119,7 +119,7 @@ class Country:
         return self.population != other.population
 
 country1 = Country("Україна", "Європа", 40000000, "+380", "Київ", ["Київ", "Львів", "Одеса"])
-country2 = Country("Росія", "Євразія", 145000000, "+7", "Москва", ["Москва", "Санкт-Петербург", "Новосибірськ"])
+country2 = Country("Німеччина", "Європа", 83000000, "+49", "Берлін", ["Берлін", "Мюнхен", "Гамбург"])
 
 print(country1 < country2)
 print(country1 <= country2)
