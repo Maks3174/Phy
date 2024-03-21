@@ -1,4 +1,5 @@
 import math
+import os
 #1
 class Person:
     count = 0
@@ -104,3 +105,76 @@ print("Максимум з чотирьох аргументів:", Calculator.m
 print("Мінімум з чотирьох аргументів:", Calculator.minimum(a, b, c, d))
 print("Середнє арифметичне з чотирьох аргументів:", Calculator.average(a, b, c, d))
 print("Факторіал аргументу:", Calculator.factorial(5))
+
+#4
+class FileUtils:
+    @staticmethod
+    def count_lines(file_path):
+        if not os.path.exists(file_path):
+            print(f"Файл {file_path} не знайдено.")
+            return 0
+
+        with open(file_path, 'r') as file:
+            lines = file.readlines()
+            return len(lines)
+
+file_path = "C:/Users/PC/Desktop/text.txt"
+print("Кількість рядків у файлі:", FileUtils.count_lines(file_path))
+
+
+#5
+class Character:
+    def __init__(self, name, health, damage):
+        self.name = name
+        self.health = health
+        self.damage = damage
+
+    def attack(self, target):
+        print(f"{self.name} атакує {target.name} з уроном {self.damage}!")
+        target.take_damage(self.damage)
+
+    def take_damage(self, damage):
+        self.health -= damage
+        if self.health <= 0:
+            print(f"{self.name} отримав {damage} урону і помер!")
+        else:
+            print(f"{self.name} отримав {damage} урону і залишився з {self.health} здоров'я.")
+
+    def heal(self, amount):
+        self.health += amount
+        print(f"{self.name} відновив {amount} здоров'я. Тепер він має {self.health} здоров'я.")
+
+    def display_info(self):
+        print(f"Ім'я: {self.name}, Здоров'я: {self.health}, Урон: {self.damage}")
+
+player = Character("Гравець", 100, 20)
+enemy = Character("Ворог", 80, 15)
+
+player.attack(enemy)
+enemy.attack(player)
+
+player.take_damage(10)
+enemy.take_damage(25)
+
+player.heal(15)
+
+player.display_info()
+enemy.display_info()
+
+#6
+class Student:
+    def __init__(self, name, age, grade):
+        self.name = name
+        self.age = age
+        self.grade = grade
+        self.courses = []
+
+    def add_course(self, course):
+        self.courses.append(course)
+        print(f"{course} додано до списку курсів студента {self.name}.")
+
+student1 = Student("Іван", 18, 11)
+student1.add_course("Математика")
+student1.add_course("Фізика")
+
+print(f"Курси студента {student1.name}: {student1.courses}")
