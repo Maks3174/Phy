@@ -1,25 +1,43 @@
 import math
 import os
 #1
-class Person:
-    count = 0
-
-    def __init__(self, name, age):
+class Student:
+    def __init__(self, name, age, grade):
         self.name = name
         self.age = age
-        Person.count += 1
+        self.grade = grade
+        self.courses = []
 
+    def add_course(self, course):
+        self.courses.append(course)
+        print(f"{course} додано до списку курсів студента {self.name}.")
+
+    def change_grade(self, new_grade):
+        self.grade = new_grade
+        print(f"Рівень студента {self.name} змінено на {self.grade}.")
+
+    def change_age(self, new_age):
+        self.age = new_age
+        print(f"Вік студента {self.name} змінено на {self.age}.")
+
+    def display_info(self):
+        print(f"Ім'я: {self.name}, Вік: {self.age}, Рівень: {self.grade}, Курси: {', '.join(self.courses)}")
 
     @staticmethod
-    def get_count():
-        return Person.count
+    def create_student():
+        name = input("Введіть ім'я студента: ")
+        age = int(input("Введіть вік студента: "))
+        grade = int(input("Введіть рівень студента: "))
+        return Student(name, age, grade)
 
-person1 = Person("Maks", 20)
-person1 = Person("Ivan", 30)
-person1 = Person("Oleksiy", 25)
+student1 = Student.create_student()
+student1.add_course("Математика")
+student1.add_course("Фізика")
 
-print("Кількість створених об'єктів класу 'Person'", Person.get_count())
+student1.change_grade(12)
+student1.change_age(19)
 
+student1.display_info()
 
 #2
 class GeometryCalculator:
