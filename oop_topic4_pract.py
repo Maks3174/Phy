@@ -26,8 +26,22 @@ class Student:
     @staticmethod
     def create_student():
         name = input("Введіть ім'я студента: ")
-        age = int(input("Введіть вік студента: "))
-        grade = int(input("Введіть рівень студента: "))
+        while True:
+            try:
+                age = int(input("Введіть вік студента: "))
+                if age <= 0:
+                    raise ValueError("Вік повинен бути додатнім числом.")
+                break
+            except ValueError as e:
+                print(e)
+        while True:
+            try:
+                grade = int(input("Введіть клас студента: "))
+                if grade <= 0:
+                    raise ValueError("Рівень повинен бути додатнім числом.")
+                break
+            except ValueError as e:
+                print(e)
         return Student(name, age, grade)
 
 student1 = Student.create_student()
