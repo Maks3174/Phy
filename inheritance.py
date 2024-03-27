@@ -42,36 +42,51 @@ pilot.flight()
 #2
 class Passport:
     def __init__(self, name, nationality, passport_number):
-        self.name = name
-        self.nationality = nationality
-        self.passport_number = passport_number
+        self._name = name
+        self._nationality = nationality
+        self._passport_number = passport_number
 
-    @staticmethod
-    def display_passport_info(name, nationality, passport_number):
+    def display_info(self):
         print("Passport Information:")
-        print(f"Name: {name}")
-        print(f"Nationality: {nationality}")
-        print(f"Passport Number: {passport_number}")
+        print(f"Name: {self._name}")
+        print(f"Nationality: {self._nationality}")
+        print(f"Passport Number: {self._passport_number}")
+
+    def get_name(self):
+        return self._name
+
+    def get_nationality(self):
+        return self._nationality
+
+    def get_passport_number(self):
+        return self._passport_number
 
 
 class ForeignPassport(Passport):
     def __init__(self, name, nationality, passport_number, visa_info, foreign_passport_number):
         super().__init__(name, nationality, passport_number)
-        self.visa_info = visa_info
-        self.foreign_passport_number = foreign_passport_number
+        self._visa_info = visa_info
+        self._foreign_passport_number = foreign_passport_number
 
-    @staticmethod
-    def display_foreign_passport_info(name, nationality, passport_number, visa_info, foreign_passport_number):
-        Passport.display_passport_info(name, nationality, passport_number)
+    def display_info(self):
+        super().display_info()
         print("Foreign Passport Information:")
-        print(f"Visa Info: {visa_info}")
-        print(f"Foreign Passport Number: {foreign_passport_number}")
+        print(f"Visa Info: {self._visa_info}")
+        print(f"Foreign Passport Number: {self._foreign_passport_number}")
+
+    def get_visa_info(self):
+        return self._visa_info
+
+    def get_foreign_passport_number(self):
+        return self._foreign_passport_number
 
 
-Passport.display_passport_info("Mike", "USA", "123456789")
+passport = Passport("John Doe", "USA", "123456789")
+foreign_passport = ForeignPassport("John Doe", "USA", "123456789", "Valid", "987654321")
+
+passport.display_info()
 print()
-ForeignPassport.display_foreign_passport_info("Mike", "USA", "123456789", "Valid", "987654321")
-
+foreign_passport.display_info()
 
 #3
 class Animal:
@@ -112,3 +127,6 @@ print("Kangaroo:")
 print(f"Name: {kangaroo.name}")
 print(f"Habitat: {kangaroo.habitat}")
 print(f"Jump Height: {kangaroo.jump_height}")
+
+
+#4
