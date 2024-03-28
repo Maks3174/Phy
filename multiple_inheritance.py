@@ -1,31 +1,50 @@
 # Завдання 2
+class Car:
+    def __init__(self, brand, model):
+        self.brand = brand
+        self.model = model
+
+    def display_info(self):
+        print(f"Car: {self.brand} {self.model}")
+
+
 class Wheels:
-    def __init__(self, count):
-        self.count = count
+    def __init__(self, size, material):
+        self.size = size
+        self.material = material
+
+    def display_info(self):
+        print(f"Wheels: Size - {self.size}, Material - {self.material}")
 
 
 class Engine:
-    def __init__(self, type):
-        self.type = type
+    def __init__(self, power, fuel_type):
+        self.power = power
+        self.fuel_type = fuel_type
+
+    def display_info(self):
+        print(f"Engine: Power - {self.power}, Fuel Type - {self.fuel_type}")
 
 
 class Doors:
-    def __init__(self, count):
-        self.count = count
+    def __init__(self, number, automatic):
+        self.number = number
+        self.automatic = automatic
+
+    def display_info(self):
+        print(f"Doors: Number - {self.number}, Automatic - {self.automatic}")
 
 
-class Car(Wheels, Engine, Doors):
-    def __init__(self, count_wheels, engine_type, count_doors):
-        Wheels.__init__(self, count_wheels)
-        Engine.__init__(self, engine_type)
-        Doors.__init__(self, count_doors)
+class CarWithFeatures(Car, Wheels, Engine, Doors):
+    def __init__(self, brand, model, size, material, power, fuel_type, number, automatic):
+        Car.__init__(self, brand, model)
+        Wheels.__init__(self, size, material)
+        Engine.__init__(self, power, fuel_type)
+        Doors.__init__(self, number, automatic)
 
 
-car = Car(4, "Electric", 2)
-print("Number of wheels:", car.count)
-print("Engine type:", car.type)
-print("Number of doors:", car.count)
-
+car_with_features = CarWithFeatures("Toyota", "Camry", "18 inch", "Alloy", "180 hp", "Petrol", 4, True)
+car_with_features.display_info()
 
 # Завдання 3
 class DomesticAnimal:
@@ -97,84 +116,83 @@ hamster.sound()
 
 
 # Завдання 4
+from datetime import datetime
+
 class Employer:
     def __init__(self, name, position):
         self.name = name
         self.position = position
 
     def print_info(self):
-        print("This is Employer class")
+        print(f"This is {self.position} {self.name}")
+
+    def __str__(self):
+        return f"{self.position}: {self.name}"
+
+    def age(self, birth_year):
+        current_year = datetime.now().year
+        return current_year - birth_year
 
 
 class President(Employer):
+    def __init__(self, name, country, birth_year):
+        super().__init__(name, "President")
+        self.country = country
+        self.birth_year = birth_year
+
     def print_info(self):
-        print("This is President class")
+        super().print_info()
+        print(f"He is the president of {self.country}")
+
+    def __str__(self):
+        return f"President: {self.name}, Country: {self.country}"
+
+    def age(self):
+        return super().age(self.birth_year)
 
 
 class Manager(Employer):
+    def __init__(self, name, department, birth_year):
+        super().__init__(name, "Manager")
+        self.department = department
+        self.birth_year = birth_year
+
     def print_info(self):
-        print("This is Manager class")
+        super().print_info()
+        print(f"He manages the {self.department} department")
+
+    def __str__(self):
+        return f"Manager: {self.name}, Department: {self.department}"
+
+    def age(self):
+        return super().age(self.birth_year)
 
 
 class Worker(Employer):
+    def __init__(self, name, role, birth_year):
+        super().__init__(name, "Worker")
+        self.role = role
+        self.birth_year = birth_year
+
     def print_info(self):
-        print("This is Worker class")
-
-
-president = President("John", "President")
-president.print_info()
-
-manager = Manager("Mike", "Manager")
-manager.print_info()
-
-worker = Worker("Bob", "Worker")
-worker.print_info()
-
-
-# Завдання 5
-class Employer:
-    def __init__(self, name, position, age):
-        self.name = name
-        self.position = position
-        self.age = age
+        super().print_info()
+        print(f"He works as a {self.role}")
 
     def __str__(self):
-        return f"{self.name}, {self.age} years old, {self.position}"
+        return f"Worker: {self.name}, Role: {self.role}"
 
-    def __int__(self):
-        return self.age
-
-
-class President(Employer):
-    def __str__(self):
-        return f"President {self.name}, {self.age} years old"
-
-    def __int__(self):
-        return self.age
+    def age(self):
+        return super().age(self.birth_year)
 
 
-class Manager(Employer):
-    def __str__(self):
-        return f"Manager {self.name}, {self.age} years old"
+president = President("Joe Biden", "USA", 1942)
+manager = Manager("Alice Smith", "Marketing", 1985)
+worker = Worker("Bob Johnson", "Technician", 1990)
 
-    def __int__(self):
-        return self.age
+print(president)
+print(manager)
+print(worker)
 
-
-class Worker(Employer):
-    def __str__(self):
-        return f"Worker {self.name}, {self.age} years old"
-
-    def __int__(self):
-        return self.age
-
-
-president = President("John Doe", "President", 50)
-print(str(president))
-print(int(president))
-manager = Manager("Alice Smith", "Manager", 40)
-print(str(manager))
-print(int(manager))
-worker = Worker("Bob Johnson", "Worker", 30)
-print(str(worker))
-print(int(worker))
+print(f"President's age: {president.age()}")
+print(f"Manager's age: {manager.age()}")
+print(f"Worker's age: {worker.age()}")
