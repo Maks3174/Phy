@@ -85,7 +85,7 @@ try:
     user1 = User("John", 25)
     print(user1.age)
 
-    user2 = User("Alice", 130)
+    user2 = User("Mike", 130)
 except ValueError as e:
     print(e)
 
