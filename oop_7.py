@@ -68,23 +68,24 @@ print(file.get_readable_size())
 class User:
     def __init__(self, name, age):
         self.name = name
-        self.set_age(age)
+        self.age = age
 
-    def get_age(self):
+    @property
+    def age(self):
         return self._age
 
-    def set_age(self, value):
+    @age.setter
+    def age(self, value):
         if 0 <= value <= 120:
             self._age = value
         else:
             raise ValueError("Age must be between 0 and 120")
 
-    age = property(get_age, set_age)
-
 try:
-    user1 = User("Mike", 25)
+    user1 = User("John", 25)
     print(user1.age)
 
-    user2 = User("John", 130)
+    user2 = User("Alice", 130)
 except ValueError as e:
     print(e)
+
