@@ -81,11 +81,8 @@ class User:
         else:
             raise ValueError("Age must be between 0 and 120")
 
-try:
-    user1 = User("John", 25)
-    print(user1.age)
+user1 = User("Mike", 25)
+print(user1.age)
+user1.age = 130
 
-    user2 = User("Mike", 130)
-except ValueError as e:
-    print(e)
 
