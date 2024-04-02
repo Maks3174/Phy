@@ -9,7 +9,7 @@ class Calculator:
     def multiply(self, x, y):
         return x * y
 
-    def divine(self, x, y):
+    def divide(self, x, y):
         if y != 0:
             return x / y
         else:
@@ -23,7 +23,7 @@ class Calculator:
         elif operation == 'multiply':
             return self.multiply(x, y)
         elif operation == 'divine':
-            return self.divine(x, y)
+            return self.divide(x, y)
         else:
             return "Invalid operation"
 
