@@ -9,6 +9,10 @@ class LinkedList:
         self.head = None
 
     def add_number(self, number):
+        if self.check_value(number):
+            print("Це число вже є у списку.")
+            return
+
         new_node = Node(number)
         if not self.head:
             self.head = new_node
@@ -59,17 +63,15 @@ class LinkedList:
 
     def check_value(self, value):
         if not self.head:
-            print("Список порожній.")
-            return
+            return False
 
         current = self.head
         while current:
             if current.data == value:
-                print("Це число є у списку.")
-                return
+                return True
             current = current.next
 
-        print("Цього числа немає у списку.")
+        return False
 
     def replace_value(self, old_value, new_value, replace_all=False):
         if not self.head:
@@ -111,7 +113,10 @@ while True:
         number_list.show_list(reverse=True)
     elif choice == '5':
         value = int(input("Введіть число для перевірки: "))
-        number_list.check_value(value)
+        if number_list.check_value(value):
+            print("Це число є у списку.")
+        else:
+            print("Цього числа немає у списку.")
     elif choice == '6':
         old_value = int(input("Введіть значення, яке потрібно замінити: "))
         new_value = int(input("Введіть нове значення: "))
