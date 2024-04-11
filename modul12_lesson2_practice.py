@@ -1,29 +1,61 @@
-class WebPageStack:
+class Stack:
     def __init__(self):
-        self.stack = []
+        self.items = []
+
+    def is_empty(self):
+        return self.items == []
+
+    def push(self, item):
+        self.items.append(item)
+
+    def pop(self):
+        return self.items.pop()
+
+    def peek(self):
+        return self.items[-1]
+
+    def size(self):
+        return len(self.items)
+
+
+class WebHistory:
+    def __init__(self):
+        self.stack = Stack()
 
     def visit_page(self, page):
-        self.stack.append(page)
-        print(f"Відвідано сторінку: {page}")
+        self.stack.push(page)
+        print(f"Відвідана сторінка: {page}")
 
     def go_back(self):
-        if self.stack:
-            previous_page = self.stack.pop()
-            print(f"Повернулися на попередню сторінку: {previous_page}")
+        if not self.stack.is_empty():
+            page = self.stack.pop()
+            print(f"Повернулися на попередню сторінку: {page}")
         else:
-            print("Стек відвіданих сторінок порожній. Немає попередніх сторінок.")
+            print("Немає попередньої сторінки для повернення")
 
-history = WebPageStack()
 
-history.visit_page("https://example.com/page1")
-history.visit_page("https://example.com/page2")
-history.visit_page("https://example.com/page3")
+def main():
+    history = WebHistory()
 
-history.go_back()
+    history.visit_page("https://www.example.com/page1")
+    history.visit_page("https://www.example.com/page2")
+    history.visit_page("https://www.example.com/page3")
 
-history.visit_page("https://example.com/page4")
+    history.go_back()
 
-history.go_back()
+    history.visit_page("https://www.example.com/page4")
+
+    history.go_back()
+
+    history.go_back()
+
+    history.go_back()
+
+
+if __name__ == "__main__":
+    main()
+
+
 
 
 def infix_to_reverse_polish(text):
