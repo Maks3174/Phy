@@ -1,41 +1,91 @@
-class NumberList:
+class Node:
+    def __init__(self, data=None):
+        self.data = data
+        self.next = None
+
+
+class LinkedList:
     def __init__(self):
-        self.numbers = set()
+        self.head = None
 
     def add_number(self, number):
-        if number not in self.numbers:
-            self.numbers.add(number)
+        new_node = Node(number)
+        if not self.head:
+            self.head = new_node
         else:
-            print("Це число вже є у списку.")
+            current = self.head
+            while current.next:
+                current = current.next
+            current.next = new_node
 
     def remove_number(self, number):
-        self.numbers.discard(number)
+        if not self.head:
+            print("Список порожній.")
+            return
+
+        if self.head.data == number:
+            self.head = self.head.next
+            return
+
+        prev = None
+        current = self.head
+        while current and current.data != number:
+            prev = current
+            current = current.next
+
+        if not current:
+            print("Цього числа немає у списку.")
+            return
+
+        prev.next = current.next
 
     def show_list(self, reverse=False):
-        numbers = list(self.numbers)
+        if not self.head:
+            print("Список порожній.")
+            return
+
+        numbers = []
+        current = self.head
+        while current:
+            numbers.append(current.data)
+            current = current.next
+
         if reverse:
             numbers.reverse()
+
         print("Список у зворотньому порядку:" if reverse else "Список у порядку:")
         for num in numbers:
             print(num)
 
     def check_value(self, value):
-        if value in self.numbers:
-            print("Це число є у списку.")
-        else:
-            print("Цього числа немає у списку.")
+        if not self.head:
+            print("Список порожній.")
+            return
+
+        current = self.head
+        while current:
+            if current.data == value:
+                print("Це число є у списку.")
+                return
+            current = current.next
+
+        print("Цього числа немає у списку.")
 
     def replace_value(self, old_value, new_value, replace_all=False):
-        if replace_all:
-            self.numbers = {new_value if num == old_value else num for num in self.numbers}
-        elif old_value in self.numbers:
-            self.numbers.remove(old_value)
-            self.numbers.add(new_value)
-        else:
-            print("Цього числа немає у списку.")
+        if not self.head:
+            print("Список порожній.")
+            return
+
+        current = self.head
+        while current:
+            if current.data == old_value:
+                current.data = new_value
+                if not replace_all:
+                    return
+            current = current.next
 
 
-number_list = NumberList()
+number_list = LinkedList()
 
 while True:
     print("\nМеню:")
