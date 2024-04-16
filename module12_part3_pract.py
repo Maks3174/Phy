@@ -195,3 +195,82 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+#3
+class UserAuthentication:
+    def __init__(self):
+        self.users = {}
+
+    def add_user(self, username, password):
+        if username in self.users:
+            print("Користувач з таким логіном вже існує.")
+        else:
+            self.users[username] = password
+            print("Користувача успішно додано.")
+
+    def remove_user(self, username):
+        if username in self.users:
+            del self.users[username]
+            print("Користувача успішно видалено.")
+        else:
+            print("Користувача з таким логіном не знайдено.")
+
+    def check_user(self, username):
+        if username in self.users:
+            print("Користувач з таким логіном існує.")
+        else:
+            print("Користувача з таким логіном не знайдено.")
+
+    def change_username(self, old_username, new_username):
+        if old_username in self.users:
+            self.users[new_username] = self.users.pop(old_username)
+            print("Логін користувача змінено.")
+        else:
+            print("Користувача з таким логіном не знайдено.")
+
+    def change_password(self, username, new_password):
+        if username in self.users:
+            self.users[username] = new_password
+            print("Пароль користувача змінено.")
+        else:
+            print("Користувача з таким логіном не знайдено.")
+
+def main():
+    auth_system = UserAuthentication()
+
+    while True:
+        print("\nМеню:")
+        print("1. Додати нового користувача")
+        print("2. Видалити існуючого користувача")
+        print("3. Перевірити, чи існує такий користувач")
+        print("4. Змінити логін існуючого користувача")
+        print("5. Змінити пароль існуючого користувача")
+        print("6. Вийти")
+        choice = input("Оберіть операцію: ")
+
+        if choice == '1':
+            username = input("Введіть логін користувача: ")
+            password = input("Введіть пароль користувача: ")
+            auth_system.add_user(username, password)
+        elif choice == '2':
+            username = input("Введіть логін користувача для видалення: ")
+            auth_system.remove_user(username)
+        elif choice == '3':
+            username = input("Введіть логін користувача для перевірки: ")
+            auth_system.check_user(username)
+        elif choice == '4':
+            old_username = input("Введіть поточний логін користувача: ")
+            new_username = input("Введіть новий логін користувача: ")
+            auth_system.change_username(old_username, new_username)
+        elif choice == '5':
+            username = input("Введіть логін користувача: ")
+            new_password = input("Введіть новий пароль користувача: ")
+            auth_system.change_password(username, new_password)
+        elif choice == '6':
+            print("До побачення!")
+            break
+        else:
+            print("Невірний вибір. Спробуйте ще раз.")
+
+if __name__ == "__main__":
+    main()
