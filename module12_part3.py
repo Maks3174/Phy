@@ -105,18 +105,18 @@ class Dock:
         return Passenger(len(self.passenger_queue) + 1)
 
     def generate_boat(self):
-        return Boat(random.randint(5, 10))  # Випадкова кількість місць у катері
+        return Boat(random.randint(5, 10))
 
     def passenger_arrival(self):
         while True:
-            time.sleep(random.uniform(0.5, 2.0))  # Середній час між прибуттям пасажирів
+            time.sleep(random.uniform(0.5, 2.0))
             passenger = self.generate_passenger()
             self.passenger_queue.append(passenger)
             print(f"Пасажир {passenger.id} прибув на причал.")
 
     def boat_arrival(self):
         while True:
-            time.sleep(random.uniform(3.0, 5.0))  # Середній час між прибуттям катерів
+            time.sleep(random.uniform(3.0, 5.0))
             boat = self.generate_boat()
             self.boat_queue.append(boat)
             print(f"Катер {len(self.boat_queue)} прибув на причал.")
@@ -127,10 +127,10 @@ class Dock:
                 passenger = self.passenger_queue.pop(0)
                 boat = self.boat_queue.pop(0)
                 boat.add_passenger(passenger)
-            time.sleep(self.boat_interval)  # Інтервал між приходами катерів
+            time.sleep(self.boat_interval)
 
 def main():
-    dock = Dock(10, 20)  # Інтервал між приходами катерів, Максимальна кількість пасажирів
+    dock = Dock(10, 20)
 
     passenger_thread = threading.Thread(target=dock.passenger_arrival)
     boat_thread = threading.Thread(target=dock.boat_arrival)
