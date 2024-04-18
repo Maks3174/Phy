@@ -1,93 +1,89 @@
-from fastrbtree import FastRBTree as RBTree
+class TreeNode:
+    def __init__(self, word, translations):
+        self.word = word
+        self.translations = translations
+        self.left = None
+        self.right = None
+        self.count = 0
 
 class Dictionary:
     def __init__(self):
-        self.tree = RBTree()
-        self.popularity_counter = RBTree()
+        self.root = None
+        self.popular_words = {}
+        self.unpopular_words = {}
 
-    def add_word(self, word, translations):
-        self.tree[word] = translations
-        self.popularity_counter[word] = 0
+    def insert(self, word, translations):
+        self.root = self._insert(self.root, word, translations)
 
-    def get_translations(self, word):
-        return self.tree.get(word)
+    def _insert(self, node, word, translations):
+        if node is None:
+            return TreeNode(word, translations)
+        if word < node.word:
+            node.left = self._insert(node.left, word, translations)
+        elif word > node.word:
+            node.right = self._insert(node.right, word, translations)
+        return node
 
-    def update_translations(self, word, translations):
-        if word in self.tree:
-            self.tree[word] = translations
-            print(f"Переклади слова '{word}' оновлено.")
-        else:
-            print(f"Слово '{word}' відсутнє у словнику.")
+    def search(self, word):
+        return self._search(self.root, word)
 
-    def delete_word(self, word):
-        if word in self.tree:
-            del self.tree[word]
-            del self.popularity_counter[word]
-            print(f"Слово '{word}' видалено зі словника.")
-        else:
-            print(f"Слово '{word}' відсутнє у словнику.")
+    def _search(self, node, word):
+        if node is None:
+            return None
+        if node.word == word:
+            node.count += 1
+            return node.translations
+        if word < node.word:
+            return self._search(node.left, word)
+        return self._search(node.right, word)
 
     def add_translation(self, word, translation):
-        if word in self.tree:
-            self.tree[word].append(translation)
-            print(f"Переклад '{translation}' додано до слова '{word}'.")
-        else:
-            print(f"Слово '{word}' відсутнє у словнику.")
+        translations = self.search(word)
+        if translations is not None:
+            translations.append(translation)
 
     def remove_translation(self, word, translation):
-        if word in self.tree and translation in self.tree[word]:
-            self.tree[word].remove(translation)
-            print(f"Переклад '{translation}' видалено зі слова '{word}'.")
-        else:
-            print(f"Слово '{word}' або переклад '{translation}' відсутні у словнику.")
+        translations = self.search(word)
+        if translations is not None and translation in translations:
+            translations.remove(translation)
 
-    def increment_popularity_counter(self, word):
-        if word in self.popularity_counter:
-            self.popularity_counter[word] += 1
-        else:
-            print(f"Слово '{word}' відсутнє у словнику.")
+    def add_word(self, word, translations):
+        self.insert(word, translations)
 
-    def decrement_popularity_counter(self, word):
-        if word in self.popularity_counter and self.popularity_counter[word] > 0:
-            self.popularity_counter[word] -= 1
-        else:
-            print(f"Слово '{word}' відсутнє у словнику або лічильник популярності вже дорівнює 0.")
+    def remove_word(self, word):
+        pass
 
-    def get_top_popular_words(self, n=10):
-        return sorted(self.popularity_counter.items(), key=lambda x: x[1], reverse=True)[:n]
+    def display_top_words(self, n):
+        sorted_words = sorted(self.popular_words.items(), key=lambda x: x[1], reverse=True)
+        print(f"Топ-{n} найпопулярніших слів:")
+        for i in range(min(n, len(sorted_words))):
+            print(f"{i+1}. {sorted_words[i][0]} (кількість звернень: {sorted_words[i][1]})")
 
-    def get_top_unpopular_words(self, n=10):
-        return sorted(self.popularity_counter.items(), key=lambda x: x[1])[:n]
+    def display_bottom_words(self, n):
+        sorted_words = sorted(self.unpopular_words.items(), key=lambda x: x[1])
+        print(f"Топ-{n} найнепопулярніших слів:")
+        for i in range(min(n, len(sorted_words))):
+            print(f"{i+1}. {sorted_words[i][0]} (кількість звернень: {sorted_words[i][1]})")
+
+def main():
+    dictionary = Dictionary()
+
+    dictionary.add_word("apple", ["яблуко"])
+    dictionary.add_word("banana", ["банан"])
+    dictionary.add_word("cherry", ["вишня"])
+
+    print("Переклад слова 'apple':", dictionary.search("apple"))
+    print("Переклад слова 'banana':", dictionary.search("banana"))
+    print("Переклад слова 'cherry':", dictionary.search("cherry"))
+    print("Переклад слова 'grape':", dictionary.search("grape"))
+
+    dictionary.add_translation("apple", "яблучко")
+    print("Переклад слова 'apple' після додавання:", dictionary.search("apple"))
+    dictionary.remove_translation("apple", "яблуко")
+    print("Переклад слова 'apple' після видалення:", dictionary.search("apple"))
+
+    dictionary.display_top_words(10)
+    dictionary.display_bottom_words(10)
 
 if __name__ == "__main__":
-    dictionary = Dictionary()
-    dictionary.add_word("apple", ["яблуко", "малина"])
-    dictionary.add_word("banana", ["банан", "помаранч"])
-    dictionary.add_word("carrot", ["морква", "картопля"])
-
-    print("Словник:")
-    print(dictionary.tree)
-
-    print("\nПереклади слова 'apple':", dictionary.get_translations("apple"))
-
-    dictionary.update_translations("banana", ["банан", "помаранч", "банановий сік"])
-    print("\nОновлені переклади слова 'banana':", dictionary.get_translations("banana"))
-
-    dictionary.delete_word("apple")
-    print("\nСловник після видалення слова 'apple':")
-    print(dictionary.tree)
-
-    dictionary.add_translation("banana", "ананас")
-    print("\nДоданий переклад 'ананас' до слова 'banana':", dictionary.get_translations("banana"))
-
-    dictionary.remove_translation("banana", "помаранч")
-    print("\nВидалений переклад 'помаранч' зі слова 'banana':", dictionary.get_translations("banana"))
-
-    print("\nТоп-10 найпопулярніших слів:", dictionary.get_top_popular_words())
-    print("\nТоп-10 найнепопулярніших слів:", dictionary.get_top_unpopular_words())
-
-    dictionary.increment_popularity_counter("banana")
-    print("\nТоп-10 найпопулярніших слів після збільшення популярності слова 'banana':", dictionary.get_top_popular_words())
-
-    dictionary.decrement_popularity_counter("banana")
-    print("\nТоп-10 найпопулярніших слів після зменшення популярності слова 'banana':", dictionary.get_top_popular_words())
+    main()
