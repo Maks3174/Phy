@@ -1,65 +1,42 @@
 #1
-def compress_and_save(data, filename):
-    with open(filename, 'w') as file:
-        compressed_data = ' '.join(map(str, data))
-        file.write(compressed_data)
+import pickle
+import gzip
 
-def load_from_file(filename):
-    with open(filename, 'r') as file:
-        data = file.read().split()
-        return [int(item) for item in data]
+def save_data(data, filename):
+    with gzip.open(filename, 'wb') as f:
+        pickle.dump(data, f)
 
-def main():
-    data = list(map(int, input("Введіть список цілих чисел через пробіл: ").split()))
+def load_data(filename):
+    with gzip.open(filename, 'rb') as f:
+        data = pickle.load(f)
+    return data
 
-    filename = "compressed_data.txt"
+user_data = []
+while True:
+    num = input("Введіть ціле число або 'stop' для завершення вводу: ")
+    if num.lower() == 'stop':
+        break
+    try:
+        user_data.append(int(num))
+    except ValueError:
+        print("Неправильне введення. Спробуйте ще раз.")
 
-    compress_and_save(data, filename)
-    print("Дані успішно збережено у файлі.")
+save_data(user_data, 'compressed_data.pkl.gz')
 
-    loaded_data = load_from_file(filename)
-    print("Дані успішно завантажено з файлу:", loaded_data)
-
-if __name__ == "__main__":
-    main()
+loaded_data = load_data('compressed_data.pkl.gz')
+print("Завантажені дані з файлу:", loaded_data)
 
 #2
-def compress(data):
-    return ' '.join(map(str, data))
+def save_data(data, filename):
+    with gzip.open(filename, 'wb') as f:
+        pickle.dump(data, f)
 
-def decompress(data):
-    return list(map(int, data.split()))
 
-def load_data():
-    try:
-        with open("data.txt", "r") as file:
-            compressed_data = file.read()
-            return decompress(compressed_data)
-    except FileNotFoundError:
-        print("Файл з даними не знайдено.")
-        return []
+def load_data(filename):
+    with gzip.open(filename, 'rb') as f:
+        data = pickle.load(f)
+    return data
 
-def save_data(data):
-    compressed_data = compress(data)
-    with open("data.txt", "w") as file:
-        file.write(compressed_data)
-    print("Дані успішно збережено у файлі.")
-
-def add_data(data):
-    new_data = list(map(int, input("Введіть нові дані через пробіл: ").split()))
-    data.extend(new_data)
-    print("Дані успішно додано.")
-
-def remove_data(data):
-    try:
-        value = int(input("Введіть значення, яке потрібно видалити: "))
-        if value in data:
-            data.remove(value)
-            print("Дані успішно видалено.")
-        else:
-            print("Таке значення не знайдено.")
-    except ValueError:
-        print("Неправильний формат вводу.")
 
 def main():
     data = []
@@ -71,29 +48,51 @@ def main():
         print("3. Додавання даних")
         print("4. Видалення даних")
         print("5. Вихід")
-        choice = input("Оберіть опцію: ")
+
+        choice = input("Виберіть опцію: ")
 
         if choice == '1':
-            data = load_data()
+            try:
+                filename = input("Введіть ім'я файлу для завантаження: ")
+                data = load_data(filename)
+                print("Дані завантажено успішно.")
+            except FileNotFoundError:
+                print("Файл не знайдено.")
         elif choice == '2':
-            save_data(data)
+            try:
+                filename = input("Введіть ім'я файлу для збереження: ")
+                save_data(data, filename)
+                print("Дані збережено успішно.")
+            except Exception as e:
+                print("Помилка під час збереження даних:", e)
         elif choice == '3':
-            add_data(data)
+            try:
+                num = int(input("Введіть ціле число для додавання: "))
+                data.append(num)
+                print("Дані успішно додано до списку.")
+            except ValueError:
+                print("Неправильне введення. Будь ласка, введіть ціле число.")
         elif choice == '4':
-            remove_data(data)
+            try:
+                index = int(input("Введіть індекс елемента, який потрібно видалити: "))
+                if 0 <= index < len(data):
+                    del data[index]
+                    print("Елемент успішно видалено.")
+                else:
+                    print("Неправильний індекс.")
+            except ValueError:
+                print("Неправильне введення. Будь ласка, введіть ціле число.")
         elif choice == '5':
             print("До побачення!")
             break
         else:
-            print("Невірний вибір. Спробуйте ще раз.")
+            print("Неправильний вибір. Будь ласка, виберіть опцію зі списку.")
+
 
 if __name__ == "__main__":
     main()
 
-
 #3
-import gzip
-import pickle
 
 def save_data(data, filename):
     with gzip.open(filename, 'wb') as f:
