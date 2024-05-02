@@ -52,6 +52,10 @@ if __name__ == "__main__":
 
 
 #3
+import threading
+
+
+# Функція для зчитування чисел з файлу та розділення їх на парні та непарні
 def process_numbers(filename):
     even_numbers = []
     odd_numbers = []
@@ -65,9 +69,11 @@ def process_numbers(filename):
         else:
             odd_numbers.append(num)
 
+    # Створення нового файлу для парних чисел
     with open("even_numbers.txt", 'w') as f:
         f.write('\n'.join(map(str, even_numbers)))
 
+    # Створення нового файлу для непарних чисел
     with open("odd_numbers.txt", 'w') as f:
         f.write('\n'.join(map(str, odd_numbers)))
 
@@ -76,8 +82,10 @@ def process_numbers(filename):
 
 
 def main():
+    # Зчитуємо шлях до файлу з клавіатури
     filename = input("Введіть шлях до файлу: ")
 
+    # Створюємо потік для обробки чисел
     process_thread = threading.Thread(target=process_numbers, args=(filename,))
     process_thread.start()
     process_thread.join()
