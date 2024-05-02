@@ -17,9 +17,9 @@ def load_friends_from_file(filename):
 
 def main():
     fixed_friends_dict = {
-        'Alice': ['Bob', 'Charlie'],
-        'Bob': ['Alice', 'Charlie'],
-        'Charlie': ['Alice', 'Bob']
+        'Alice': ['Bob', 'Maks'],
+        'Bob': ['Alice', 'Maks'],
+        'Maks': ['Alice', 'Bob']
     }
 
     save_friends_to_file(fixed_friends_dict, "friends.pkl")
