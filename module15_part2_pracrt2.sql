@@ -1,15 +1,5 @@
-CREATE TABLE Students (
-    student_id SERIAL PRIMARY KEY,
-    full_name VARCHAR(100),
-    date_of_birth DATE,
-    city VARCHAR(100),
-    country VARCHAR(100),
-    email VARCHAR(100),
-    phone_number VARCHAR(20),
-    grade DECIMAL(5,2)
-);
 
-INSERT INTO Students (full_name, date_of_birth, city, country, email, phone_number, grade) VALUES
+яINSERT INTO Students (full_name, date_of_birth, city, country, email, phone_number, grade) VALUES
 ('John Smith', '2000-05-15', 'New York', 'USA', 'john@example.com', '1234567890', 85.50),
 ('Alice Johnson', '2001-08-20', 'Los Angeles', 'USA', 'alice@example.com', '9876543210', 90.25),
 ('Michael Brown', '1989-11-10', 'London', 'UK', 'michael@example.com', '7418529630', 79.00),
