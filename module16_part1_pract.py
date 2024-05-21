@@ -9,7 +9,7 @@ with open('config.json', 'r') as f:
     db_user = data['user']
     db_password = data['password']
 
-db_url = f'postgresql+psycopg2://{db_user}:{db_password}@localhost:5432/peopledb'
+db_url = f'postgresql+psycopg2://{db_user}:{db_password}@localhost:5432/people'
 engine = create_engine(db_url)
 
 Base = declarative_base()
