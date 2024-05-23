@@ -1,290 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, DECIMAL, CheckConstraint
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-import json
-
-with open('config.json', 'r') as f:
-    data = json.load(f)
-    db_user = data['user']
-    db_password = data['password']
-
-db_url = f'postgresql+psycopg2://{db_user}:{db_password}@localhost:5432/Title'
-engine = create_engine(db_url)
-Session = sessionmaker(bind=engine)
-session = Session()
-Base = declarative_base()
-
-
-class Department(Base):
-    __tablename__ = 'departments'
-    Id = Column(Integer, primary_key=True)
-    Building = Column(Integer, nullable=False)
-    Financing = Column(DECIMAL(10, 2), nullable=False, default=0)
-    Name = Column(String(100), nullable=False, unique=True)
-    __table_args__ = (
-        CheckConstraint('Building >= 1 AND Building <= 5'),
-        CheckConstraint('Financing >= 0'),
-    )
-
-
-Base.metadata.create_all(engine)
-
-
-def insert_department(building, financing, name):
-    new_department = Department(Building=building, Financing=financing, Name=name)
-    session.add(new_department)
-    session.commit()
-
-
-def update_department(department_id, building=None, financing=None, name=None):
-    department = session.query(Department).filter_by(Id=department_id).first()
-    if department:
-        if building is not None:
-            department.Building = building
-        if financing is not None:
-            department.Financing = financing
-        if name is not None:
-            department.Name = name
-        session.commit()
-
-
-def update_all_departments(building=None, financing=None, name=None):
-    confirmation = input("Are you sure you want to update all rows in Departments? (yes/no): ")
-    if confirmation.lower() != 'yes':
-        print("Operation cancelled.")
-        return
-
-    departments = session.query(Department).all()
-    for department in departments:
-        if building is not None:
-            department.Building = building
-        if financing is not None:
-            department.Financing = financing
-        if name is not None:
-            department.Name = name
-    session.commit()
-
-
-def delete_department(department_id):
-    department = session.query(Department).filter_by(Id=department_id).first()
-    if department:
-        session.delete(department)
-        session.commit()
-
-
-def delete_all_departments():
-    confirmation = input("Are you sure you want to delete all rows in Departments? (yes/no): ")
-    if confirmation.lower() != 'yes':
-        print("Operation cancelled.")
-        return
-
-    session.query(Department).delete()
-    session.commit()
-
-
-def main_menu():
-    while True:
-        print("\nHospital Database Management")
-        print("1. Insert Department")
-        print("2. Update Department")
-        print("3. Update All Departments")
-        print("4. Delete Department")
-        print("5. Delete All Departments")
-        print("6. Exit")
-
-        choice = input("Enter your choice: ")
-
-        if choice == '1':
-            building = int(input("Enter building number (1-5): "))
-            financing = float(input("Enter financing amount: "))
-            name = input("Enter department name: ")
-            insert_department(building, financing, name)
-            print("Department inserted successfully.")
-
-        elif choice == '2':
-            department_id = int(input("Enter department ID to update: "))
-            building = input("Enter new building number (leave blank to keep current): ")
-            financing = input("Enter new financing amount (leave blank to keep current): ")
-            name = input("Enter new department name (leave blank to keep current): ")
-
-            update_department(
-                department_id,
-                building=int(building) if building else None,
-                financing=float(financing) if financing else None,
-                name=name if name else None
-            )
-            print("Department updated successfully.")
-
-        elif choice == '3':
-            building = input("Enter new building number for all departments (leave blank to keep current): ")
-            financing = input("Enter new financing amount for all departments (leave blank to keep current): ")
-            name = input("Enter new name for all departments (leave blank to keep current): ")
-
-            update_all_departments(
-                building=int(building) if building else None,
-                financing=float(financing) if financing else None,
-                name=name if name else None
-            )
-            print("All departments updated successfully.")
-
-        elif choice == '4':
-            department_id = int(input("Enter department ID to delete: "))
-            delete_department(department_id)
-            print("Department deleted successfully.")
-
-        elif choice == '5':
-            delete_all_departments()
-            print("All departments deleted successfully.")
-
-        elif choice == '6':
-            print("Exiting...")
-            break
-
-        else:
-            print("Invalid choice. Please try again.")
-
-
-if __name__ == '__main__':
-    main_menu()
-
-#2
-from sqlalchemy import create_engine, Column, Integer, String, DECIMAL, Boolean, ForeignKey, Date
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship
-import json
-
-with open('config.json', 'r') as f:
-    data = json.load(f)
-    db_user = data['user']
-    db_password = data['password']
-
-db_url = f'postgresql+psycopg2://{db_user}:{db_password}@localhost:5432/Title'
-engine = create_engine(db_url)
-Session = sessionmaker(bind=engine)
-session = Session()
-Base = declarative_base()
-
-class Department(Base):
-    __tablename__ = 'departments'
-    Id = Column(Integer, primary_key=True)
-    Building = Column(Integer, nullable=False)
-    Financing = Column(DECIMAL(10, 2), nullable=False, default=0)
-    Name = Column(String(100), nullable=False, unique=True)
-
-class Doctor(Base):
-    __tablename__ = 'doctors'
-    Id = Column(Integer, primary_key=True)
-    Name = Column(String(255), nullable=False)
-    Phone = Column(String(10))
-    Salary = Column(DECIMAL(10, 2), nullable=False)
-    Surname = Column(String(255), nullable=False)
-    OnVacation = Column(Boolean, nullable=False, default=False)
-    Allowance = Column(DECIMAL(10, 2), nullable=False, default=0)
-
-class Specialization(Base):
-    __tablename__ = 'specializations'
-    Id = Column(Integer, primary_key=True)
-    Name = Column(String(100), nullable=False, unique=True)
-
-class DoctorSpecialization(Base):
-    __tablename__ = 'doctorsspecializations'
-    DoctorId = Column(Integer, ForeignKey('doctors.Id'), primary_key=True)
-    SpecializationId = Column(Integer, ForeignKey('specializations.Id'), primary_key=True)
-
-class Ward(Base):
-    __tablename__ = 'wards'
-    Id = Column(Integer, primary_key=True)
-    Building = Column(Integer, nullable=False)
-    Floor = Column(Integer, nullable=False)
-    Name = Column(String(20), nullable=False, unique=True)
-    DepartmentId = Column(Integer, ForeignKey('departments.Id'))
-
-class Donation(Base):
-    __tablename__ = 'donations'
-    Id = Column(Integer, primary_key=True)
-    DepartmentId = Column(Integer, ForeignKey('departments.Id'), nullable=False)
-    Sponsor = Column(String(100), nullable=False)
-    Amount = Column(DECIMAL(10, 2), nullable=False)
-    DonationDate = Column(Date, nullable=False)
-
-Base.metadata.create_all(engine)
-
-def get_doctors_specializations():
-    results = session.query(Doctor.Surname, Specialization.Name).\
-              join(DoctorSpecialization, Doctor.Id == DoctorSpecialization.DoctorId).\
-              join(Specialization, Specialization.Id == DoctorSpecialization.SpecializationId).all()
-    for surname, specialization in results:
-        print(f"Doctor: {surname}, Specialization: {specialization}")
-
-def get_doctors_salaries_not_on_vacation():
-    results = session.query(Doctor.Surname, (Doctor.Salary + Doctor.Allowance).label('TotalSalary')).\
-              filter(Doctor.OnVacation == False).all()
-    for surname, total_salary in results:
-        print(f"Doctor: {surname}, Total Salary: {total_salary}")
-
-def get_wards_in_department(department_id):
-    results = session.query(Ward.Name).filter(Ward.DepartmentId == department_id).all()
-    for ward_name in results:
-        print(f"Ward: {ward_name}")
-
-def get_donations_by_month(year, month):
-    results = session.query(Department.Name, Donation.Sponsor, Donation.Amount, Donation.DonationDate).\
-              join(Department, Department.Id == Donation.DepartmentId).\
-              filter(Donation.DonationDate.between(f'{year}-{month}-01', f'{year}-{month}-31')).all()
-    for department_name, sponsor, amount, donation_date in results:
-        print(f"Department: {department_name}, Sponsor: {sponsor}, Amount: {amount}, Date: {donation_date}")
-
-def get_departments_by_sponsor(sponsor):
-    results = session.query(Department.Name).\
-              join(Donation, Donation.DepartmentId == Department.Id).\
-              filter(Donation.Sponsor == sponsor).distinct().all()
-    for department_name in results:
-        print(f"Department: {department_name}")
-
-def main_menu():
-    while True:
-        print("\nHospital Database Reports")
-        print("1. Show Doctors and their Specializations")
-        print("2. Show Doctors' Surnames and Salaries (not on vacation)")
-        print("3. Show Ward Names in a Department")
-        print("4. Show Donations by Month")
-        print("5. Show Departments Sponsored by a Company")
-        print("6. Exit")
-
-        choice = input("Enter your choice: ")
-
-        if choice == '1':
-            get_doctors_specializations()
-
-        elif choice == '2':
-            get_doctors_salaries_not_on_vacation()
-
-        elif choice == '3':
-            department_id = int(input("Enter department ID: "))
-            get_wards_in_department(department_id)
-
-        elif choice == '4':
-            year = int(input("Enter year (YYYY): "))
-            month = int(input("Enter month (MM): "))
-            get_donations_by_month(year, month)
-
-        elif choice == '5':
-            sponsor = input("Enter sponsor name: ")
-            get_departments_by_sponsor(sponsor)
-
-        elif choice == '6':
-            print("Exiting...")
-            break
-
-        else:
-            print("Invalid choice. Please try again.")
-
-if __name__ == '__main__':
-    main_menu()
-
-
-#3
-from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, DECIMAL
+from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, DECIMAL, ForeignKey, inspect, text
 from sqlalchemy.orm import sessionmaker
 import json
 
@@ -299,26 +13,113 @@ Session = sessionmaker(bind=engine)
 session = Session()
 metadata = MetaData(bind=engine)
 
+# Функції для завдання 1
+def insert_row(table_name, data):
+    table = Table(table_name, metadata, autoload_with=engine)
+    insert_stmt = table.insert().values(data)
+    session.execute(insert_stmt)
+    session.commit()
+    print(f"Row inserted into {table_name}")
+
+def update_rows(table_name, update_values, condition=None):
+    table = Table(table_name, metadata, autoload_with=engine)
+    update_stmt = table.update()
+    if condition:
+        update_stmt = update_stmt.where(text(condition))
+    update_stmt = update_stmt.values(update_values)
+    session.execute(update_stmt)
+    session.commit()
+    print(f"Rows updated in {table_name}")
+
+def delete_rows(table_name, condition=None):
+    table = Table(table_name, metadata, autoload_with=engine)
+    delete_stmt = table.delete()
+    if condition:
+        delete_stmt = delete_stmt.where(text(condition))
+    session.execute(delete_stmt)
+    session.commit()
+    print(f"Rows deleted from {table_name}")
+
+def confirm_action(message):
+    confirm = input(message + " (yes/no): ")
+    return confirm.lower() in ['yes', 'y']
+
+# Функції для завдання 2
+def report_doctors_specializations():
+    result = session.execute(text("""
+        SELECT doctors.surname, specializations.name
+        FROM doctors
+        JOIN doctor_specializations ON doctors.id = doctor_specializations.doctor_id
+        JOIN specializations ON doctor_specializations.specialization_id = specializations.id
+    """)).fetchall()
+    for row in result:
+        print(f"{row.surname}: {row.name}")
+
+def report_doctors_salaries():
+    result = session.execute(text("""
+        SELECT surname, (salary + allowance) as total_salary
+        FROM doctors
+        WHERE vacation = false
+    """)).fetchall()
+    for row in result:
+        print(f"{row.surname}: {row.total_salary}")
+
+def report_wards_in_department(department_name):
+    result = session.execute(text("""
+        SELECT wards.name
+        FROM wards
+        JOIN departments ON wards.department_id = departments.id
+        WHERE departments.name = :dept_name
+    """), {'dept_name': department_name}).fetchall()
+    for row in result:
+        print(row.name)
+
+def report_donations_by_month(month):
+    result = session.execute(text("""
+        SELECT departments.name as department, sponsors.name as sponsor, donations.amount, donations.date
+        FROM donations
+        JOIN departments ON donations.department_id = departments.id
+        JOIN sponsors ON donations.sponsor_id = sponsors.id
+        WHERE EXTRACT(MONTH FROM donations.date) = :month
+    """), {'month': month}).fetchall()
+    for row in result:
+        print(f"Department: {row.department}, Sponsor: {row.sponsor}, Amount: {row.amount}, Date: {row.date}")
+
+def report_departments_by_sponsor(sponsor_name):
+    result = session.execute(text("""
+        SELECT DISTINCT departments.name
+        FROM departments
+        JOIN donations ON departments.id = donations.department_id
+        JOIN sponsors ON donations.sponsor_id = sponsors.id
+        WHERE sponsors.name = :sponsor_name
+    """), {'sponsor_name': sponsor_name}).fetchall()
+    for row in result:
+        print(row.name)
+
+# Функції для завдання 3 (Робота зі структурою бази даних)
 def show_tables():
-    tables = engine.table_names()
+    inspector = inspect(engine)
+    tables = inspector.get_table_names()
     print("Tables in the database:")
     for table in tables:
         print(table)
 
 def show_columns(table_name):
-    table = Table(table_name, metadata, autoload_with=engine)
+    inspector = inspect(engine)
+    columns = inspector.get_columns(table_name)
     print(f"Columns in table {table_name}:")
-    for column in table.columns:
-        print(column.name)
+    for column in columns:
+        print(column['name'])
 
 def show_columns_and_types(table_name):
-    table = Table(table_name, metadata, autoload_with=engine)
+    inspector = inspect(engine)
+    columns = inspector.get_columns(table_name)
     print(f"Columns and their types in table {table_name}:")
-    for column in table.columns:
-        print(f"{column.name} - {column.type}")
+    for column in columns:
+        print(f"{column['name']} - {column['type']}")
 
 def show_relationships():
-    inspector = engine.dialect.get_inspector(engine)
+    inspector = inspect(engine)
     print("Foreign key relationships:")
     for table_name in inspector.get_table_names():
         foreign_keys = inspector.get_foreign_keys(table_name)
@@ -369,59 +170,115 @@ def drop_column(table_name, column_name):
 
 def main_menu():
     while True:
-        print("\nDatabase Structure Management")
-        print("1. Show all tables")
-        print("2. Show columns in a table")
-        print("3. Show columns and their types in a table")
-        print("4. Show relationships between tables")
-        print("5. Create a table")
-        print("6. Drop a table")
-        print("7. Add a column to a table")
-        print("8. Drop a column from a table")
-        print("9. Exit")
+        print("\nDatabase Management System for 'Hospital'")
+        print("1. Insert a row into a table")
+        print("2. Update rows in a table")
+        print("3. Delete rows from a table")
+        print("4. Generate reports")
+        print("5. Database structure operations")
+        print("6. Exit")
 
         choice = input("Enter your choice: ")
 
         if choice == '1':
-            show_tables()
+            table_name = input("Enter the table name: ")
+            data = input("Enter data as key=value pairs separated by commas: ")
+            data_dict = dict(pair.split('=') for pair in data.split(','))
+            insert_row(table_name, data_dict)
 
         elif choice == '2':
             table_name = input("Enter the table name: ")
-            show_columns(table_name)
+            update_values = input("Enter update values as key=value pairs separated by commas: ")
+            update_dict = dict(pair.split('=') for pair in update_values.split(','))
+            condition = input("Enter condition (or leave blank to update all rows): ")
+            if not condition:
+                if confirm_action("Are you sure you want to update all rows in the table?"):
+                    update_rows(table_name, update_dict)
+                else:
+                    print("Update canceled.")
+            else:
+                update_rows(table_name, update_dict, condition)
 
         elif choice == '3':
             table_name = input("Enter the table name: ")
-            show_columns_and_types(table_name)
+            condition = input("Enter condition (or leave blank to delete all rows): ")
+            if not condition:
+                if confirm_action("Are you sure you want to delete all rows in the table?"):
+                    delete_rows(table_name)
+                else:
+                    print("Delete canceled.")
+            else:
+                delete_rows(table_name, condition)
 
         elif choice == '4':
-            show_relationships()
+            print("1. Report doctors and their specializations")
+            print("2. Report doctors and their salaries (excluding those on vacation)")
+            print("3. Report wards in a specific department")
+            print("4. Report donations for a specific month")
+            print("5. Report departments sponsored by a specific company")
+            report_choice = input("Enter your choice: ")
+            if report_choice == '1':
+                report_doctors_specializations()
+            elif report_choice== '2':
+                report_doctors_salaries()
+            elif report_choice == '3':
+                department_name = input("Enter the department name: ")
+                report_wards_in_department(department_name)
+            elif report_choice == '4':
+                month = input("Enter the month (as a number): ")
+                report_donations_by_month(month)
+            elif report_choice == '5':
+                sponsor_name = input("Enter the sponsor company name: ")
+                report_departments_by_sponsor(sponsor_name)
+            else:
+                print("Invalid choice.")
 
         elif choice == '5':
-            table_name = input("Enter the table name: ")
-            columns = input("Enter columns (name:type, separated by commas): ").split(',')
-            create_table(table_name, columns)
+            print("1. Show tables")
+            print("2. Show columns of a table")
+            print("3. Show columns and their types of a table")
+            print("4. Show foreign key relationships")
+            print("5. Create a new table")
+            print("6. Drop a table")
+            print("7. Add a column to a table")
+            print("8. Drop a column from a table")
+            operation_choice = input("Enter your choice: ")
+            if operation_choice == '1':
+                show_tables()
+            elif operation_choice == '2':
+                table_name = input("Enter the table name: ")
+                show_columns(table_name)
+            elif operation_choice == '3':
+                table_name = input("Enter the table name: ")
+                show_columns_and_types(table_name)
+            elif operation_choice == '4':
+                show_relationships()
+            elif operation_choice == '5':
+                table_name = input("Enter the new table name: ")
+                columns = input("Enter columns and their types separated by commas (e.g., id:Integer,name:String): ")
+                create_table(table_name, columns.split(','))
+            elif operation_choice == '6':
+                table_name = input("Enter the table name to drop: ")
+                drop_table(table_name)
+            elif operation_choice == '7':
+                table_name = input("Enter the table name to add column: ")
+                column_name = input("Enter the new column name: ")
+                column_type = input("Enter the column type (Integer/String/DECIMAL): ")
+                add_column(table_name, column_name, column_type)
+            elif operation_choice == '8':
+                table_name = input("Enter the table name to drop column: ")
+                column_name = input("Enter the column name to drop: ")
+                drop_column(table_name, column_name)
+            else:
+                print("Invalid choice.")
 
         elif choice == '6':
-            table_name = input("Enter the table name: ")
-            drop_table(table_name)
-
-        elif choice == '7':
-            table_name = input("Enter the table name: ")
-            column_name = input("Enter the column name: ")
-            column_type = input("Enter the column type (Integer, String, DECIMAL): ")
-            add_column(table_name, column_name, column_type)
-
-        elif choice == '8':
-            table_name = input("Enter the table name: ")
-            column_name = input("Enter the column name: ")
-            drop_column(table_name, column_name)
-
-        elif choice == '9':
-            print("Exiting...")
+            print("Exiting the program.")
             break
 
         else:
-            print("Invalid choice. Please try again.")
+            print("Invalid choice. Please enter a valid option.")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main_menu()
+
