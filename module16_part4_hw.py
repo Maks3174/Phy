@@ -24,7 +24,6 @@ def handle_client(client_socket):
         try:
             message = client_socket.recv(1024)
             if message:
-                # Зберігання повідомлення у Redis
                 r.rpush('chat_messages', message)
                 print(f"Отримано повідомлення: {message.decode()}")
                 broadcast(message, client_socket)
@@ -78,3 +77,4 @@ def send_message():
 if __name__ == "__main__":
     threading.Thread(target=receive_messages).start()
     send_message()
+
